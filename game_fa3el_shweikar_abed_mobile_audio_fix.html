@@ -1,0 +1,740 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لعبة الفاعل - المعلمة شويكار عابد</title>
+  <style>
+    :root{
+      --bg1:#fff7ef;
+      --bg2:#eef8ff;
+      --card:#ffffff;
+      --text:#273043;
+      --accent:#ff9f68;
+      --accent2:#6fb7ff;
+      --good:#30b36b;
+      --bad:#e45d5d;
+      --shadow:0 10px 30px rgba(0,0,0,.10);
+      --radius:26px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: "Arial","Tahoma","Noto Sans Arabic",sans-serif;
+      background: linear-gradient(135deg,var(--bg1),var(--bg2));
+      color:var(--text);
+      min-height:100vh;
+    }
+    .wrap{
+      max-width:1000px;
+      margin:0 auto;
+      padding:16px;
+    }
+    .hero, .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .hero{
+      padding:22px;
+      margin:18px 0 16px;
+      text-align:center;
+    }
+    h1{
+      margin:0 0 8px;
+      font-size:clamp(28px,4vw,42px);
+    }
+    .sub{
+      font-size:18px;
+      line-height:1.8;
+      margin:8px auto 0;
+      max-width:800px;
+    }
+    .teacher{
+      display:inline-block;
+      margin-top:12px;
+      background:#fff2df;
+      color:#8a4a18;
+      padding:10px 16px;
+      border-radius:999px;
+      font-weight:700;
+    }
+    .top-actions, .actions, .choice-row, .footer-buttons{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      align-items:center;
+    }
+    button{
+      border:none;
+      border-radius:18px;
+      padding:12px 18px;
+      font-size:18px;
+      cursor:pointer;
+      box-shadow:0 5px 14px rgba(0,0,0,.08);
+      transition:.18s transform ease,.18s opacity ease;
+      font-weight:700;
+    }
+    button:hover{ transform:translateY(-1px); }
+    button:active{ transform:translateY(1px); }
+    .primary{ background:var(--accent); color:#fff; }
+    .secondary{ background:var(--accent2); color:#fff; }
+    .ghost{ background:#f5f7fb; color:var(--text); }
+    .speak-btn{
+      width:54px;height:54px;border-radius:50%;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-size:24px;padding:0;background:#fff6d8;color:#7b5c00;
+    }
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin:16px 0;
+    }
+    .stat{
+      background:#fff;
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      padding:14px;
+      text-align:center;
+      font-size:19px;
+      font-weight:700;
+    }
+    .game{
+      padding:18px;
+      margin-bottom:16px;
+    }
+    .pill{
+      display:inline-block;
+      padding:8px 14px;
+      border-radius:999px;
+      background:#eef7ff;
+      color:#33608b;
+      font-weight:700;
+      margin-bottom:12px;
+    }
+    .question{
+      font-size:clamp(24px,3.3vw,34px);
+      line-height:1.8;
+      text-align:center;
+      margin:12px 0 18px;
+      font-weight:700;
+    }
+    .choice-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+      margin-top:18px;
+    }
+    .choice{
+      background:#f8fbff;
+      border:3px solid transparent;
+      border-radius:22px;
+      padding:14px;
+      min-height:94px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .choice.correct{ border-color:var(--good); background:#effcf4; }
+    .choice.wrong{ border-color:var(--bad); background:#fff2f2; }
+    .choice .txt{
+      font-size:24px;
+      font-weight:700;
+      flex:1;
+    }
+    .feedback{
+      margin-top:16px;
+      text-align:center;
+      font-size:22px;
+      font-weight:800;
+      min-height:32px;
+    }
+    .good{ color:var(--good); }
+    .bad{ color:var(--bad); }
+
+    .progress{
+      height:16px;
+      background:#edf2f7;
+      border-radius:999px;
+      overflow:hidden;
+      margin-top:12px;
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,var(--accent),#ffc36b);
+      transition:width .3s ease;
+    }
+
+    .mini-board{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+      margin-top:18px;
+    }
+    .sentence-card{
+      background:#fbfdff;
+      border-radius:22px;
+      padding:16px;
+      box-shadow:0 5px 14px rgba(0,0,0,.06);
+      min-height:130px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+    .sentence-text{
+      font-size:22px;
+      line-height:1.8;
+      text-align:center;
+      font-weight:700;
+    }
+    .small{
+      font-size:16px;
+      opacity:.85;
+    }
+    .home{
+      text-align:center;
+      padding:18px;
+    }
+    .menu-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+      margin-top:18px;
+    }
+    .menu-card{
+      padding:18px;
+      border-radius:24px;
+      background:#fff;
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+    .menu-card h3{
+      margin:0 0 8px;
+      font-size:28px;
+    }
+    .menu-card p{
+      margin:0 0 14px;
+      line-height:1.8;
+      font-size:18px;
+    }
+    .tag{
+      display:inline-block;
+      background:#f5f7fb;
+      padding:8px 12px;
+      border-radius:999px;
+      margin-bottom:10px;
+      font-size:15px;
+      font-weight:700;
+    }
+    .hidden{ display:none !important; }
+    .celebrate{
+      font-size:28px;
+      text-align:center;
+      padding:10px 0 0;
+      font-weight:800;
+    }
+    @media (max-width:760px){
+      .stats,.choice-grid,.menu-grid,.mini-board{ grid-template-columns:1fr; }
+      .choice .txt{ font-size:22px; }
+      button{ width:auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>لُعْبَةُ الفَاعِل 🌟</h1>
+      <div class="sub">
+        لعبة تفاعلية ممتعة لطلاب الصف الخامس للتدرّب على <strong>الفاعل</strong> بطريقة ليست صعبة وليست سهلة.
+        اسمع، فكّر، ثم اختر أو ابحث عن الفاعل الصحيح.
+      </div>
+      <div class="teacher">إعداد المعلمة: شويكار عابد</div>
+      <div class="card" style="margin-top:16px; padding:14px; text-align:center; background:#fffdf6;">
+      <div style="font-weight:700; font-size:18px; line-height:1.8;">
+        مهم: في بعض الهواتف لا يعمل الصوت إلا بعد الضغط أولاً على زر تفعيل الصوت.
+      </div>
+      <div class="top-actions" style="margin-top:12px;">
+        <button id="enableAudioBtn" class="secondary" onclick="enableAudio()">تفعيل الصوت 🔊</button>
+        <button class="ghost" onclick="testAudio()">جرّب الصوت</button>
+      </div>
+      <div id="audioStatus" style="margin-top:8px; font-size:16px;">الصوت غير مُفعّل بعد.</div>
+    </div>
+    <div class="top-actions" style="margin-top:16px;">
+        <button class="speak-btn" onclick="speak(introText)" aria-label="استمع للمقدمة">🔊</button>
+        <button class="primary" onclick="showScreen('home')">الرئيسية</button>
+      </div>
+    </section>
+
+    <div class="stats">
+      <div class="stat">النِّقاط: <span id="score">0</span></div>
+      <div class="stat">المرحلة: <span id="levelLabel">—</span></div>
+      <div class="stat">التقدُّم: <span id="progressText">0%</span></div>
+    </div>
+
+    <section id="home" class="card home">
+      <div class="pill">اختر لعبة</div>
+      <div class="menu-grid">
+        <div class="menu-card">
+          <div class="tag">اختيار من متعدد</div>
+          <h3>لعبة 1: اِصْطَدِ الفاعل</h3>
+          <p>اقرأ أو استمع إلى الجملة، ثم اختر الفاعل الصحيح من بين الخيارات.</p>
+          <div class="footer-buttons">
+            <button class="speak-btn" onclick="speak('لعبة اصطد الفاعل. اقرأ أو استمع إلى الجملة، ثم اختر الفاعل الصحيح من بين الخيارات.')" aria-label="استمع">🔊</button>
+            <button class="primary" onclick="startQuiz()">ابدأ</button>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <div class="tag">تحدّي أسرع</div>
+          <h3>لعبة 2: مَنْ قام بالفعل؟</h3>
+          <p>اقرأ ثلاث جمل، واضغط على الكلمة التي تمثّل الفاعل في كل جملة.</p>
+          <div class="footer-buttons">
+            <button class="speak-btn" onclick="speak('لعبة من قام بالفعل. اقرأ ثلاث جمل، واضغط على الكلمة التي تمثل الفاعل في كل جملة.')" aria-label="استمع">🔊</button>
+            <button class="secondary" onclick="startTapGame()">ابدأ</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="quizScreen" class="card game hidden">
+      <div class="pill">لعبة 1: اِصْطَدِ الفاعل</div>
+      <div class="actions">
+        <button class="speak-btn" onclick="speakCurrentQuestion()" aria-label="استمع للجملة">🔊</button>
+        <button class="ghost" onclick="showHint()">تلميح</button>
+        <button class="ghost" onclick="showScreen('home')">خروج</button>
+      </div>
+
+      <div id="questionText" class="question"></div>
+
+      <div id="choiceGrid" class="choice-grid"></div>
+
+      <div id="feedback" class="feedback"></div>
+      <div class="progress"><div id="quizBar" class="bar"></div></div>
+      <div class="actions" style="margin-top:16px;">
+        <button id="nextBtn" class="primary hidden" onclick="nextQuizQuestion()">التالي</button>
+      </div>
+    </section>
+
+    <section id="tapScreen" class="card game hidden">
+      <div class="pill">لعبة 2: مَنْ قام بالفعل؟</div>
+      <div class="actions">
+        <button class="speak-btn" onclick="speakTapIntro()" aria-label="استمع للتعليمات">🔊</button>
+        <button class="ghost" onclick="resetTapRound()">جولة جديدة</button>
+        <button class="ghost" onclick="showScreen('home')">خروج</button>
+      </div>
+
+      <div id="tapBoard" class="mini-board"></div>
+      <div id="tapFeedback" class="feedback"></div>
+      <div class="progress"><div id="tapBar" class="bar"></div></div>
+      <div class="actions" style="margin-top:16px;">
+        <button id="tapNextBtn" class="secondary hidden" onclick="nextTapRound()">التالي</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const introText = "مرحباً بكم في لعبة الفاعل. إعداد المعلمة شويكار عابد. اختر اللعبة، استمع جيداً، ثم ابحث عن الفاعل بطريقة ممتعة.";
+    
+    let arabicVoice = null;
+    let voicesReady = false;
+    let audioEnabled = false;
+    let lastSpokenText = '';
+
+    function loadVoices() {
+      const voices = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+      arabicVoice =
+        voices.find(v => /^ar/i.test(v.lang)) ||
+        voices.find(v => /Arabic|العربية|ar-/i.test((v.lang || '') + ' ' + (v.name || ''))) ||
+        null;
+      voicesReady = voices.length > 0;
+      updateAudioStatus();
+    }
+
+    function updateAudioStatus(extra=''){
+      const status = document.getElementById('audioStatus');
+      if(!status) return;
+      if(!('speechSynthesis' in window)){
+        status.textContent = 'هذا الجهاز أو المتصفح لا يدعم قراءة النص.';
+        return;
+      }
+      if(!audioEnabled){
+        status.textContent = 'الصوت غير مُفعّل بعد.';
+        return;
+      }
+      if(arabicVoice){
+        status.textContent = 'تم تفعيل الصوت. الصوت العربي جاهز.' + (extra ? ' ' + extra : '');
+      } else {
+        status.textContent = 'تم تفعيل الصوت، لكن لم يتم العثور على صوت عربي واضح في هذا الجهاز. قد يعمل الصوت بصوت افتراضي أو قد لا يعمل جيداً.' + (extra ? ' ' + extra : '');
+      }
+    }
+
+    loadVoices();
+    if ('speechSynthesis' in window) {
+      speechSynthesis.onvoiceschanged = loadVoices;
+      setTimeout(loadVoices, 300);
+      setTimeout(loadVoices, 1000);
+      setTimeout(loadVoices, 2000);
+    }
+
+    function enableAudio(){
+      if(!('speechSynthesis' in window)){
+        updateAudioStatus();
+        return;
+      }
+      audioEnabled = true;
+      try{
+        speechSynthesis.cancel();
+        const warmup = new SpeechSynthesisUtterance(' ');
+        warmup.volume = 0;
+        warmup.rate = 1;
+        if (arabicVoice) warmup.voice = arabicVoice;
+        speechSynthesis.speak(warmup);
+      }catch(e){}
+      updateAudioStatus('يمكنك الآن الضغط على أزرار السماعة.');
+      setTimeout(loadVoices, 400);
+    }
+
+    function testAudio(){
+      if(!audioEnabled){
+        enableAudio();
+      }
+      speak('مرحباً. أنا لعبة الفاعل للمعلمة شويكار عابد.');
+    }
+
+    function speak(text){
+      lastSpokenText = text;
+      if(!('speechSynthesis' in window)) {
+        updateAudioStatus();
+        return;
+      }
+      if(!audioEnabled){
+        updateAudioStatus('اضغط على زر تفعيل الصوت أولاً.');
+        return;
+      }
+
+      try {
+        speechSynthesis.cancel();
+      } catch(e) {}
+
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = arabicVoice ? arabicVoice.lang : 'ar-SA';
+      msg.rate = 0.88;
+      msg.pitch = 1;
+      msg.volume = 1;
+      if (arabicVoice) msg.voice = arabicVoice;
+
+      msg.onstart = () => updateAudioStatus('يعمل الآن.');
+      msg.onerror = () => updateAudioStatus('حدثت مشكلة في تشغيل الصوت على هذا الجهاز.');
+      msg.onend = () => updateAudioStatus();
+
+      try{
+        speechSynthesis.speak(msg);
+        setTimeout(() => {
+          if (speechSynthesis.paused) {
+            try { speechSynthesis.resume(); } catch(e) {}
+          }
+        }, 200);
+      }catch(e){
+        updateAudioStatus('تعذر تشغيل الصوت على هذا الجهاز.');
+      }
+    }
+
+    function showScreen(id){
+      currentScreen = id;
+      document.getElementById('home').classList.add('hidden');
+      document.getElementById('quizScreen').classList.add('hidden');
+      document.getElementById('tapScreen').classList.add('hidden');
+      document.getElementById(id).classList.remove('hidden');
+      updateStats();
+    }
+
+    let score = 0;
+    function addScore(n){
+      score += n;
+      document.getElementById('score').textContent = score;
+    }
+
+    function updateStats(level='—', progress=0){
+      document.getElementById('levelLabel').textContent = level;
+      document.getElementById('progressText').textContent = `${progress}%`;
+    }
+
+    // Game 1
+    const quizData = [
+      {q:'كَتَبَ الطَّالِبُ الدَّرْسَ.', choices:['الدَّرْسَ','الطَّالِبُ','كَتَبَ','في الدَّفْتَرِ'], a:1, hint:'الفاعل هو مَنْ قام بالفعل.'},
+      {q:'سَقَتِ الأُمُّ الزُّهُورَ.', choices:['الأُمُّ','الزُّهُورَ','سَقَتِ','الماءُ'], a:0, hint:'اسأل: مَن الذي سقى؟'},
+      {q:'لَعِبَ الأَطْفالُ في السَّاحَةِ.', choices:['السَّاحَةِ','لَعِبَ','الأَطْفالُ','في'], a:2, hint:'الفاعل هنا جمع.'},
+      {q:'يَشْرَبُ الوَلَدُ الحَليبَ.', choices:['الحَليبَ','الوَلَدُ','يَشْرَبُ','الكُوبُ'], a:1, hint:'ابحث عن مَن يشرب.'},
+      {q:'فَتَحَ الحارِسُ البابَ.', choices:['البابَ','فَتَحَ','الحارِسُ','المِفْتاحُ'], a:2, hint:'من الذي فتح؟'},
+      {q:'رَسَمَتْ سَلْمى الشَّجَرَةَ.', choices:['سَلْمى','الشَّجَرَةَ','رَسَمَتْ','اللَّوْنُ'], a:0, hint:'الفاعل قد يكون اسماً علماً.'},
+      {q:'جَمَعَ الفَلّاحُ الزَّيْتونَ.', choices:['الزَّيْتونَ','الفَلّاحُ','جَمَعَ','السَّلَّةُ'], a:1, hint:'هو الشخص الذي قام بالفعل.'},
+      {q:'قَرَأَتِ المُعَلِّمَةُ القِصَّةَ.', choices:['القِصَّةَ','قَرَأَتْ','المُعَلِّمَةُ','الصَّفُّ'], a:2, hint:'الفاعل هنا مؤنث.'}
+    ];
+
+    let quizIndex = 0;
+    let quizOrder = [];
+    let currentQuizItem = null;
+
+    function shuffle(arr){
+      return [...arr].sort(()=>Math.random()-0.5);
+    }
+
+    function startQuiz(){
+      quizOrder = shuffle(quizData).slice(0,6);
+      quizIndex = 0;
+      showScreen('quizScreen');
+      renderQuizQuestion();
+    }
+
+    function renderQuizQuestion(){
+      currentQuizItem = quizOrder[quizIndex];
+      document.getElementById('questionText').textContent = currentQuizItem.q;
+      document.getElementById('feedback').textContent = '';
+      document.getElementById('feedback').className = 'feedback';
+      document.getElementById('nextBtn').classList.add('hidden');
+
+      const grid = document.getElementById('choiceGrid');
+      grid.innerHTML = '';
+      currentQuizItem.choices.forEach((choice, i) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'choice';
+
+        const txt = document.createElement('div');
+        txt.className = 'txt';
+        txt.textContent = choice;
+
+        const row = document.createElement('div');
+        row.className = 'choice-row';
+
+        const hear = document.createElement('button');
+        hear.className = 'speak-btn';
+        hear.innerHTML = '🔊';
+        hear.setAttribute('aria-label','استمع للخيار');
+        hear.onclick = (e) => { e.stopPropagation(); speak(choice); };
+
+        const pick = document.createElement('button');
+        pick.className = 'ghost';
+        pick.textContent = 'اختر';
+        pick.onclick = () => chooseAnswer(i, wrap);
+
+        row.appendChild(hear);
+        row.appendChild(pick);
+
+        wrap.appendChild(txt);
+        wrap.appendChild(row);
+        wrap.onclick = () => chooseAnswer(i, wrap);
+        grid.appendChild(wrap);
+      });
+
+      const progress = Math.round((quizIndex/quizOrder.length)*100);
+      document.getElementById('quizBar').style.width = progress + '%';
+      updateStats('اِصْطَدِ الفاعل', progress);
+      speakCurrentQuestion();
+    }
+
+    function speakCurrentQuestion(){
+      if(currentQuizItem){
+        speak('استمع إلى الجملة. ' + currentQuizItem.q + '. اختر الفاعل الصحيح.');
+      }
+    }
+
+    function showHint(){
+      if(currentQuizItem) speak('تلميح. ' + currentQuizItem.hint);
+    }
+
+    function chooseAnswer(index, element){
+      const all = [...document.querySelectorAll('#choiceGrid .choice')];
+      if(document.getElementById('nextBtn').classList.contains('hidden') === false) return;
+
+      all.forEach((el, idx) => {
+        el.style.pointerEvents = 'none';
+        if(idx === currentQuizItem.a) el.classList.add('correct');
+      });
+
+      const feed = document.getElementById('feedback');
+      if(index === currentQuizItem.a){
+        element.classList.add('correct');
+        feed.textContent = 'أحسنت! هذا هو الفاعل ✅';
+        feed.classList.add('good');
+        speak('أحسنت! هذا هو الفاعل.');
+        addScore(10);
+      }else{
+        element.classList.add('wrong');
+        feed.textContent = 'حاول مرة أخرى في السؤال القادم. الفاعل هو: ' + currentQuizItem.choices[currentQuizItem.a];
+        feed.classList.add('bad');
+        speak('ليست الإجابة الصحيحة. الفاعل هو ' + currentQuizItem.choices[currentQuizItem.a]);
+      }
+      document.getElementById('nextBtn').classList.remove('hidden');
+      const progress = Math.round(((quizIndex+1)/quizOrder.length)*100);
+      document.getElementById('quizBar').style.width = progress + '%';
+      updateStats('اِصْطَدِ الفاعل', progress);
+    }
+
+    function nextQuizQuestion(){
+      quizIndex++;
+      if(quizIndex >= quizOrder.length){
+        document.getElementById('questionText').innerHTML = 'انتهت اللعبة! 🎉';
+        document.getElementById('choiceGrid').innerHTML = '';
+        document.getElementById('feedback').innerHTML = `<span class="good">رائع! حصلت على ${score} نقطة.</span>`;
+        document.getElementById('nextBtn').classList.add('hidden');
+        document.getElementById('quizBar').style.width = '100%';
+        updateStats('اِصْطَدِ الفاعل', 100);
+        speak('رائع! أنهيت لعبة اصطياد الفاعل.');
+        return;
+      }
+      renderQuizQuestion();
+    }
+
+    // Game 2
+    const tapRounds = [
+      [
+        { sentence:'فازَ العَدّاءُ في السِّباقِ.', words:['فازَ','العَدّاءُ','في','السِّباقِ'], answer:'العَدّاءُ' },
+        { sentence:'تُرَتِّبُ الأُخْتُ غُرْفَتَها.', words:['تُرَتِّبُ','الأُخْتُ','غُرْفَتَها'], answer:'الأُخْتُ' },
+        { sentence:'سَمِعَ الوَلَدُ الجَرَسَ.', words:['سَمِعَ','الوَلَدُ','الجَرَسَ'], answer:'الوَلَدُ' }
+      ],
+      [
+        { sentence:'صَنَعَ الخَبّازُ الخُبْزَ.', words:['صَنَعَ','الخَبّازُ','الخُبْزَ'], answer:'الخَبّازُ' },
+        { sentence:'شاهَدَتْ لَيْلى الفيلْمَ.', words:['شاهَدَتْ','لَيْلى','الفيلْمَ'], answer:'لَيْلى' },
+        { sentence:'حَمَلَ العَامِلُ الصُّنْدوقَ.', words:['حَمَلَ','العَامِلُ','الصُّنْدوقَ'], answer:'العَامِلُ' }
+      ],
+      [
+        { sentence:'غَسَلَتِ البِنْتُ يَدَيْها.', words:['غَسَلَتْ','البِنْتُ','يَدَيْها'], answer:'البِنْتُ' },
+        { sentence:'أَضاءَتِ الشَّمْسُ السَّماءَ.', words:['أَضاءَتْ','الشَّمْسُ','السَّماءَ'], answer:'الشَّمْسُ' },
+        { sentence:'يَقْرَأُ الطَّبِيبُ التَّقْريرَ.', words:['يَقْرَأُ','الطَّبِيبُ','التَّقْريرَ'], answer:'الطَّبِيبُ' }
+      ]
+    ];
+
+    let tapRoundIndex = 0;
+    let tapRound = [];
+    let tapSolved = 0;
+
+    function startTapGame(){
+      tapRoundIndex = 0;
+      showScreen('tapScreen');
+      renderTapRound();
+    }
+
+    function speakTapIntro(){
+      speak('اقرأ كل جملة أو استمع لها، ثم اضغط على الكلمة التي تمثل الفاعل.');
+    }
+
+    function renderTapRound(){
+      tapRound = tapRounds[tapRoundIndex];
+      tapSolved = 0;
+      document.getElementById('tapFeedback').textContent = '';
+      document.getElementById('tapFeedback').className = 'feedback';
+      document.getElementById('tapNextBtn').classList.add('hidden');
+
+      const board = document.getElementById('tapBoard');
+      board.innerHTML = '';
+
+      tapRound.forEach((item, cardIndex) => {
+        const card = document.createElement('div');
+        card.className = 'sentence-card';
+
+        const text = document.createElement('div');
+        text.className = 'sentence-text';
+        text.textContent = item.sentence;
+
+        const actions = document.createElement('div');
+        actions.className = 'footer-buttons';
+
+        const hear = document.createElement('button');
+        hear.className = 'speak-btn';
+        hear.innerHTML = '🔊';
+        hear.onclick = ()=> speak(item.sentence);
+
+        actions.appendChild(hear);
+
+        const wordsWrap = document.createElement('div');
+        wordsWrap.className = 'footer-buttons';
+        wordsWrap.style.marginTop = '12px';
+
+        item.words.forEach(word => {
+          const b = document.createElement('button');
+          b.className = 'ghost';
+          b.textContent = word;
+          b.onclick = ()=> tapWord(b, item.answer, card);
+          wordsWrap.appendChild(b);
+        });
+
+        card.appendChild(text);
+        card.appendChild(actions);
+        card.appendChild(wordsWrap);
+
+        board.appendChild(card);
+      });
+
+      const progress = Math.round((tapRoundIndex/tapRounds.length)*100);
+      document.getElementById('tapBar').style.width = progress + '%';
+      updateStats('مَنْ قام بالفعل؟', progress);
+      speakTapIntro();
+    }
+
+    function tapWord(button, answer, card){
+      if(card.dataset.solved === 'yes') return;
+      const allButtons = [...card.querySelectorAll('.ghost')];
+      if(button.textContent === answer){
+        button.style.background = '#effcf4';
+        button.style.border = '2px solid #30b36b';
+        card.dataset.solved = 'yes';
+        tapSolved++;
+        addScore(10);
+        speak('ممتاز! هذه الكلمة هي الفاعل.');
+        if(tapSolved === tapRound.length){
+          document.getElementById('tapFeedback').textContent = 'أحسنت! أنهيت هذه الجولة ✅';
+          document.getElementById('tapFeedback').className = 'feedback good';
+          document.getElementById('tapNextBtn').classList.remove('hidden');
+          const progress = Math.round(((tapRoundIndex+1)/tapRounds.length)*100);
+          document.getElementById('tapBar').style.width = progress + '%';
+          updateStats('مَنْ قام بالفعل؟', progress);
+        }
+      } else {
+        button.style.background = '#fff2f2';
+        button.style.border = '2px solid #e45d5d';
+        speak('هذه ليست الإجابة الصحيحة.');
+        setTimeout(()=>{
+          if(card.dataset.solved !== 'yes'){
+            button.style.background = '';
+            button.style.border = '';
+          }
+        }, 700);
+      }
+    }
+
+    function resetTapRound(){
+      renderTapRound();
+    }
+
+    function nextTapRound(){
+      tapRoundIndex++;
+      if(tapRoundIndex >= tapRounds.length){
+        document.getElementById('tapBoard').innerHTML = `<div class="celebrate">🎉 ممتاز! أنهيت جميع جولات الفاعل. مجموع نقاطك: ${score}</div>`;
+        document.getElementById('tapFeedback').textContent = 'عمل رائع!';
+        document.getElementById('tapFeedback').className = 'feedback good';
+        document.getElementById('tapNextBtn').classList.add('hidden');
+        document.getElementById('tapBar').style.width = '100%';
+        updateStats('مَنْ قام بالفعل؟', 100);
+        speak('رائع جداً! أنهيت جميع جولات لعبة من قام بالفعل.');
+        return;
+      }
+      renderTapRound();
+    }
+
+
+    document.addEventListener('click', function firstUnlock(){
+      if(!audioEnabled){
+        enableAudio();
+      }
+    }, { once:true });
+
+    showScreen('home');
+    document.getElementById('score').textContent = score;
+  </script>
+</body>
+</html>
